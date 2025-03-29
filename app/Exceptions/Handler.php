@@ -4,10 +4,13 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use GuzzleHttp\Exception\ClientException;
 
 class Handler extends ExceptionHandler
 {
@@ -49,6 +52,24 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof ClientException) {
+            $message = $exception->getResponse()->getBody()->getContents();
+            $code = $exception->getCode();
+            return $this->errorMessage($message, $code);
+        }
+
         return parent::render($request, $exception);
+    }
+
+    /**
+     * Build error response
+     *
+     * @param string|array $message
+     * @param int $code
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function errorMessage($message, $code)
+    {
+        return response()->json(['error' => $message, 'code' => $code], $code);
     }
 }
