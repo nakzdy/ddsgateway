@@ -8,9 +8,22 @@ class User1Service
 {
     use ConsumesExternalService;
 
+    /**
+     * the base uri to consume the user1 service
+     * @var string
+     */
+    public $baseUri;
+
+    /**
+     * The secret to consume the User1 Service
+     * @var string
+     */
+    public $secret;
+
     public function __construct()
     {
         $this->baseUri = config('services.users1.base_uri');
+        $this->secret = config('services.users1.secret');
     }
 
     /**
@@ -20,9 +33,10 @@ class User1Service
     public function obtainUsers1()
     {
         try {
-            return $this->makeRequest('GET', '/api/users'); // Add the /api/ prefix here
+            return $this->makeRequest('GET', '/api/users');
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            return json_encode(['error' => $e->getMessage(), 'code' => 500, 'site' => 1]); // Add site info
+            $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
+            return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 1]);
         }
     }
 
@@ -36,7 +50,8 @@ class User1Service
         try {
             return $this->makeRequest('POST', '/api/users', $data);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            return json_encode(['error' => $e->getMessage(), 'code' => 500, 'site' => 1]); // Add site info
+            $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
+            return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 1]);
         }
     }
 
@@ -45,7 +60,8 @@ class User1Service
         try {
             return $this->makeRequest('GET', "/api/users/{$id}");
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            return json_encode(['error' => $e->getMessage(), 'code' => 500, 'site' => 1]); // Add site info
+            $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
+            return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 1]);
         }
     }
 
@@ -54,7 +70,8 @@ class User1Service
         try {
             return $this->makeRequest('PUT', "/api/users/{$id}", $data);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            return json_encode(['error' => $e->getMessage(), 'code' => 500, 'site' => 1]); // Add site info
+            $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
+            return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 1]);
         }
     }
 
@@ -63,7 +80,20 @@ class User1Service
         try {
             return $this->makeRequest('DELETE', "/api/users/{$id}");
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            return json_encode(['error' => $e->getMessage(), 'code' => 500, 'site' => 1]); // Add site info
+            $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
+            return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 1]);
         }
+    }
+
+    /**
+     * Helper function to extract the error message from a JSON response.
+     *
+     * @param string $responseBody
+     * @return string|null
+     */
+    protected function extractErrorMessage($responseBody)
+    {
+        $decodedResponse = json_decode($responseBody, true);
+        return $decodedResponse['error'] ?? null;
     }
 }
