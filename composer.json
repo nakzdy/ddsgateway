@@ -10,7 +10,9 @@
         "guzzlehttp/guzzle": "^7.9",
         "laravel/lumen-framework": "^8.0",
         "laravel/passport": "^10.0",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "lcobucci/clock": "^2.0",
+        "league/oauth2-server": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
