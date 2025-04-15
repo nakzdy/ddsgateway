@@ -33,7 +33,7 @@ class User2Service
     public function obtainUsers2()
     {
         try {
-            return $this->makeRequest('GET', '/users');
+            return $this->makeRequest('GET', '/api/users');
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
             return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 2]);
@@ -48,7 +48,7 @@ class User2Service
     public function createUser2(array $data)
     {
         try {
-            return $this->makeRequest('POST', '/users', $data);
+            return $this->makeRequest('POST', '/api/users', $data);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
             return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 2]);
@@ -58,7 +58,7 @@ class User2Service
     public function obtainUser2($id)
     {
         try {
-            return $this->makeRequest('GET', "/users/{$id}");
+            return $this->makeRequest('GET', "/api/users/{$id}");
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
             return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 2]);
@@ -68,7 +68,7 @@ class User2Service
     public function editUser2(array $data, $id)
     {
         try {
-            return $this->makeRequest('PUT', "/users/{$id}", $data);
+            return $this->makeRequest('PUT', "/api/users/{$id}", $data);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
             return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 2]);
@@ -78,7 +78,7 @@ class User2Service
     public function deleteUser2($id)
     {
         try {
-            return $this->makeRequest('DELETE', "/users/{$id}");
+            return $this->makeRequest('DELETE', "/api/users/{$id}");
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             $errorMessage = $this->extractErrorMessage($e->getResponse()->getBody()->getContents());
             return json_encode(['error' => $errorMessage, 'code' => $e->getResponse()->getStatusCode(), 'site' => 2]);
